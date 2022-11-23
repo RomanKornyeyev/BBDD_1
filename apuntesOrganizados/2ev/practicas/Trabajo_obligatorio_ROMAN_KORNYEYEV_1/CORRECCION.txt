@@ -1,0 +1,3 @@
+COSAS QUE TENGO MAL:
+- NO REPITO DATOS (no inserto tablas repetidas)
+- NO PONGO COMMIT

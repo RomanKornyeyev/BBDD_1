@@ -1,0 +1,3 @@
+En los words de teoría del T8 en adelante también están los ejercicios prácticos resueltos y ejemplos.
+
+Todas las selects de los ejercicios que vienen en los words se hacen con las tablas que están en la carpeta tablas.
