@@ -1,0 +1,44 @@
+ordinaria:
+
+(CHAT HENRY):
+---HENRY:
+MODELO E-R:
+REFLEXIVA, CÓDIGOS SECUENCIALES, ES-UN
+
+RELACIONAL:
+mirarse el ejer de bancos era igual. La cp está formada por otras claves.
+
+NORMALIZAR:
+hacer tuplas sí o sí, no estaba ninguno en 1fn, después había que separar tienda y empleado.
+
+SQL:
+Unique
+limitar valores de campos
+uso de char
+fechas
+modificar tablas
+modificar filas
+funciones matemáticas
+personalizar la salida
+decimales y miles en campos
+
+SQL/PL:
+triggers
+procedimientos
+saber modificar campos
+
+
+---ROMAN:
+MODELO E-R: 
+FLORISTERÍA
+línea de pedidos que se identifica con número correlativo
+
+las flores las entregan repartidores que tenían un solo jefe
+
+SQL:
+persona, matrícula multa, no todos los vehículos tienen una multa
+sacar todos los vehículos que tienen más de una multa
+
+PL/SQL:
+TRIGGERS: insert en la tabla empleados te genera una fila en la tabla control
+FUNCIONES, PROCEDIMIENTOS, BLOQUES ANÓNIMOS
