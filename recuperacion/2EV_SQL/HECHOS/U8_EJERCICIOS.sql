@@ -12,6 +12,7 @@ SELECT TEMA, ESTANTE, EJEMPLARES FROM LIBRERIA WHERE ESTANTE NOT BETWEEN 'B' AND
 SELECT TEMA FROM LIBRERIA WHERE EJEMPLARES NOT BETWEEN 15 AND 20;
 
 
+
 /* === SUBCONSULTAS === */
 /* 5.	Mostrar los empleados (nombre, oficio, salario y fecha de alta) que desempeñen el mismo oficio que “JIMENEZ” o que tengan un salario mayor o igual que “FERNANDEZ”.*/
 SELECT APELLIDO, OFICIO, SALARIO, FECHA_ALT
@@ -36,20 +37,76 @@ SELECT TEMA FROM LIBRERIA WHERE EJEMPLARES < (SELECT EJEMPLARES FROM LIBRERIA WH
 
 /* === COMBINACION DE TABLAS === */
 /* 9.	Visualizar todas las asignaturas que contengan tres letras “o” en su interior y tengan alumnos matriculados de “Madrid”.*/
-SELECT NOMBRE FROM ASIGNATURAS, ALUMNOS, NOTAS WHERE NOMBRE LIKE '%o%o%o%' AND POBLA LIKE 'MADRID' AND ASIGNATURAS.COD=NOTAS.COD AND NOTAS.DNI=ALUMNOS.DNI;
+SELECT NOMBRE
+FROM ASIGNATURAS, ALUMNOS, NOTAS
+WHERE
+	NOMBRE LIKE '%o%o%o%' AND POBLA LIKE 'Madrid'
+	AND
+	ASIGNATURAS.COD = NOTAS.COD AND NOTAS.DNI = ALUMNOS.DNI;
 
-SELECT NOMBRE FROM ASIGNATURAS A, ALUMNOS AL, NOTAS N WHERE NOMBRE LIKE '%o%o%o%' AND POBLA='Madrid' AND A.COD= N.COD AND N.DNI=AL.DNI;
+/* otra manera (renombrando tablas) */
+SELECT NOMBRE
+FROM ASIGNATURAS A, ALUMNOS AL, NOTAS N
+WHERE
+	NOMBRE LIKE '%o%o%o%' AND POBLA='Madrid'
+	AND
+	A.COD = N.COD AND N.DNI = AL.DNI;
+	
 /* 10.	Visualizar los nombres de alumnos que tengan una nota entre 7 y 8 en la asignatura de “FOL”.*/
+SELECT APENOM,NOMBRE,NOTA
+FROM NOTAS N, ALUMNOS AL, ASIGNATURAS A
+WHERE 
+	NOTA BETWEEN 7 AND 8 AND NOMBRE LIKE 'FOL'
+	AND
+	AL.DNI = N.DNI AND A.COD = N.COD;
+
 /* 11.	Visualizar los nombres de asignaturas que no tengan suspensos.*/
+SELECT DISTINCT NOMBRE FROM ASIGNATURAS A, NOTAS N WHERE NOTA >= 5 AND A.COD = N.COD;
+
 /* 12.	Visualizar los nombres de alumnos de “Madrid” que tengan alguna asignatura suspensa.*/
+SELECT APENOM
+FROM NOTAS N, ALUMNOS AL, ASIGNATURAS A
+WHERE
+	POBLA LIKE 'Madrid' AND NOTA < 5
+	AND
+	AL.DNI = N.DNI AND A.COD = N.COD;
+
 /* 13.	Mostrar los nombres de alumnos que tengan la misma nota que tiene “Díaz Fernández, María” en FOL en alguna asignatura.*/
+/* ??? creo que funciona */
+SELECT APENOM, NOMBRE, NOTA
+FROM NOTAS N, ALUMNOS AL, ASIGNATURAS A
+WHERE
+	NOTA LIKE (
+			SELECT NOTA
+			FROM NOTAS N, ALUMNOS AL, ASIGNATURAS A
+			WHERE
+				(AL.DNI = N.DNI AND A.COD = N.COD)
+				AND
+				(APENOM LIKE 'Díaz Fernández, María' AND NOMBRE LIKE 'FOL')
+			)
+	AND
+	AL.DNI = N.DNI AND A.COD = N.COD;
+
 /* 14.	Seleccionar el apellido, el oficio y la localidad de los departamentos donde trabajan los ANALISTAS. */
+SELECT APELLIDO, OFICIO, LOC
+FROM EMPLE E, DEPART D
+WHERE
+	OFICIO LIKE 'ANALISTA'
+	AND
+	D.DEPT_NO = E.DEPT_NO;
+
 
 
 /* === TABLAS EMPLE y DEPART === */
-/* 1.	Obtener los datos de los empleados cuyo director (columna DIR de EMPLE) sea ‘CEREZO’.*/
-/* 2.	 Obtener los datos de los empleados del departamento de ‘VENTAS’.*/
+/* 1.	Obtener los datos de los empleados cuyo director (columna DIR de EMPLE) sea ‘CEREZO’.*/	
+SELECT * FROM EMPLE WHERE DIR LIKE (SELECT EMP_NO FROM EMPLE WHERE APELLIDO='CEREZO');
+
+/* 2.	Obtener los datos de los empleados del departamento de ‘VENTAS’.*/
+SELECT * FROM EMPLE WHERE DEPT_NO LIKE (SELECT DEPT_NO FROM DEPART WHERE DNOMBRE LIKE 'VENTAS');
+
 /* 3.	Obtener los datos de los departamentos que no tengan empleados.*/
+SELECT
+
 /* 4.	Obtener los datos de los departamentos que tengan empleados.*/
 /* 5.	Obtener el apellido y el salario de los empleados que superen todos los salarios de los empleados del departamento 20.*/
 
