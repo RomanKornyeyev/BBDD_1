@@ -1,1 +1,5 @@
 ¿Cuándo LIKE y cuando "="?
+ = 	PARA NÚMEROS
+LIKE 	PARA STRINGS
+
+¿IN?

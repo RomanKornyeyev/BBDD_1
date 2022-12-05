@@ -1,6 +1,6 @@
 /* === SELECT DE UNA SOLA TABLA === */
 /* 1.	Seleccionar de la tabla EMPLE aquellas filas cuyo APELLIDO empiece por “A” y el OFICIO tenga una “E” en cualquier posición. */
-SELECT * FROM EMPLE WHERE APELLIDO LIKE '%A' AND OFICIO LIKE '%E%';
+SELECT * FROM EMPLE WHERE APELLIDO LIKE 'A%' AND OFICIO LIKE '%E%';
 
 /* 2.	Visualizar el tema, estante y ejemplares de las filas de LIBRERÍA con ejemplares comprendidos entre 8 y 15.*/
 SELECT TEMA, ESTANTE, EJEMPLARES FROM LIBRERIA WHERE EJEMPLARES BETWEEN 8 AND 15;
@@ -105,13 +105,23 @@ SELECT * FROM EMPLE WHERE DIR LIKE (SELECT EMP_NO FROM EMPLE WHERE APELLIDO='CER
 SELECT * FROM EMPLE WHERE DEPT_NO LIKE (SELECT DEPT_NO FROM DEPART WHERE DNOMBRE LIKE 'VENTAS');
 
 /* 3.	Obtener los datos de los departamentos que no tengan empleados.*/
-SELECT
+SELECT * FROM DEPART WHERE DEPT_NO NOT IN (SELECT DISTINCT DEPT_NO FROM EMPLE);
 
 /* 4.	Obtener los datos de los departamentos que tengan empleados.*/
+SELECT * FROM DEPART WHERE DEPT_NO IN (SELECT DISTINCT DEPT_NO FROM EMPLE);
+
 /* 5.	Obtener el apellido y el salario de los empleados que superen todos los salarios de los empleados del departamento 20.*/
+SELECT APELLIDO, SALARIO FROM EMPLE WHERE SALARIO > ALL (SELECT SALARIO FROM EMPLE WHERE DEPT_NO = 20);
+
 
 
 /* === TABLAS ALUMNOS, ASIGNATURAS y NOTAS === */
+/* ??? no sé si estas están bien */
 /* 1.	Obtener los datos de las asignaturas que no tengan alumnos.*/
+SELECT * FROM ASIGNATURAS WHERE COD NOT IN (SELECT COD FROM NOTAS);
+
 /* 2.	Obtener el nombre y apellido de los alumnos que tengan nota en la asignatura con código 1.*/
+SELECT APENOM FROM ALUMNOS WHERE DNI IN (SELECT DNI FROM NOTAS WHERE COD = 1);
+
 /* 3.	Obtener el nombre y apellido de los alumnos que no tengan nota en la asignatura con código 1.*/
+SELECT APENOM FROM ALUMNOS WHERE DNI NOT IN (SELECT DNI FROM NOTAS WHERE COD = 1);
