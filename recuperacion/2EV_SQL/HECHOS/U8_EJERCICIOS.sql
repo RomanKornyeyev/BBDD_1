@@ -27,11 +27,13 @@ FROM EMPLE
 WHERE (DEPT_NO, SALARIO) IN (SELECT DEPT_NO, SALARIO FROM EMPLE WHERE APELLIDO LIKE 'FERNANDEZ');
 
 /* 7.	Presentar los nombres y oficios de los empleados que tienen el mismo trabajo que “JIMENEZ”.*/
-SELECT APELLIDO, OFICIO FROM EMPLE WHERE OFICIO LIKE (SELECT OFICIO FROM EMPLE WHERE APELLIDO LIKE 'JIMENEZ');
+SELECT APELLIDO, OFICIO FROM EMPLE WHERE OFICIO = (SELECT OFICIO FROM EMPLE WHERE APELLIDO LIKE 'JIMENEZ');
+/*en "oficio =(..." ***NUNCA PUEDE IR LIKE, SIEMPRE ES = O IN*** */
 
 /* 8.	Visualizar todos los temas de LIBRERÍA cuyo número de ejemplar sea inferior a los que hay en ‘Medicina’.*/
 /**************** NO FUNCIONA ******************/
 SELECT TEMA FROM LIBRERIA WHERE EJEMPLARES < (SELECT EJEMPLARES FROM LIBRERIA WHERE TEMA LIKE 'MEDICINA');
+/*O LIKE MEDICINA%, % PORQUE NO LLEGA A LOS 15, MEJOR USAR = EN ESTE CASO*/
 
 
 
@@ -61,6 +63,7 @@ WHERE
 	AL.DNI = N.DNI AND A.COD = N.COD;
 
 /* 11.	Visualizar los nombres de asignaturas que no tengan suspensos.*/
+/*si en el examen pide visualizar los distintos nombre... PONER DISTINCT*/
 SELECT DISTINCT NOMBRE FROM ASIGNATURAS A, NOTAS N WHERE NOTA >= 5 AND A.COD = N.COD;
 
 /* 12.	Visualizar los nombres de alumnos de “Madrid” que tengan alguna asignatura suspensa.*/

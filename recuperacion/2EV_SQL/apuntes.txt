@@ -1,0 +1,11 @@
+select trabaja sobre FILAS
+funciones trabajan sobre COLUMNAS (y devuelven normalmente 1 registro)
+
+IMP:
+to_char
+to_number
+formateo de fechas, números y etiquetado de salida
+GROUP BY (empleados que hay EN CADA departamento)
+el HAVING nunca existe SI NO TIENE UN GROUP BY (visualizar los departamentos con más de 4 empleados). Si tengo que contar es porque he agrupado antes.
+orden:
+SELECT * FROM A1, A2 WHERE ... GROUP BY ... HAVING ... ORDER BY ...;
