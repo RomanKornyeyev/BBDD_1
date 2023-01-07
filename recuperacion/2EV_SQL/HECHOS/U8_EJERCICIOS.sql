@@ -17,7 +17,7 @@ SELECT TEMA FROM LIBRERIA WHERE EJEMPLARES NOT BETWEEN 15 AND 20;
 /* 5.	Mostrar los empleados (nombre, oficio, salario y fecha de alta) que desempeñen el mismo oficio que “JIMENEZ” o que tengan un salario mayor o igual que “FERNANDEZ”.*/
 SELECT APELLIDO, OFICIO, SALARIO, FECHA_ALT
 FROM EMPLE WHERE 
-	OFICIO LIKE(SELECT OFICIO FROM EMPLE WHERE APELLIDO LIKE 'JIMENEZ') 
+	OFICIO = (SELECT OFICIO FROM EMPLE WHERE APELLIDO LIKE 'JIMENEZ') 
 	OR
 	SALARIO >= (SELECT SALARIO FROM EMPLE WHERE APELLIDO LIKE 'FERNANDEZ');
 	
@@ -28,11 +28,10 @@ WHERE (DEPT_NO, SALARIO) IN (SELECT DEPT_NO, SALARIO FROM EMPLE WHERE APELLIDO L
 
 /* 7.	Presentar los nombres y oficios de los empleados que tienen el mismo trabajo que “JIMENEZ”.*/
 SELECT APELLIDO, OFICIO FROM EMPLE WHERE OFICIO = (SELECT OFICIO FROM EMPLE WHERE APELLIDO LIKE 'JIMENEZ');
-/*en "oficio =(..." ***NUNCA PUEDE IR LIKE, SIEMPRE ES = O IN*** */
+/* en "oficio =(..." *****NUNCA PUEDE IR LIKE, SIEMPRE ES = O IN***** */
 
 /* 8.	Visualizar todos los temas de LIBRERÍA cuyo número de ejemplar sea inferior a los que hay en ‘Medicina’.*/
-/**************** NO FUNCIONA ******************/
-SELECT TEMA FROM LIBRERIA WHERE EJEMPLARES < (SELECT EJEMPLARES FROM LIBRERIA WHERE TEMA LIKE 'MEDICINA');
+SELECT TEMA FROM LIBRERIA WHERE EJEMPLARES < (SELECT EJEMPLARES FROM LIBRERIA WHERE TEMA = 'MEDICINA');
 /*O LIKE MEDICINA%, % PORQUE NO LLEGA A LOS 15, MEJOR USAR = EN ESTE CASO*/
 
 
@@ -42,41 +41,41 @@ SELECT TEMA FROM LIBRERIA WHERE EJEMPLARES < (SELECT EJEMPLARES FROM LIBRERIA WH
 SELECT NOMBRE
 FROM ASIGNATURAS, ALUMNOS, NOTAS
 WHERE
-	NOMBRE LIKE '%o%o%o%' AND POBLA LIKE 'Madrid'
+	(NOMBRE LIKE '%o%o%o%' AND POBLA LIKE 'Madrid')
 	AND
-	ASIGNATURAS.COD = NOTAS.COD AND NOTAS.DNI = ALUMNOS.DNI;
+	(ASIGNATURAS.COD = NOTAS.COD AND NOTAS.DNI = ALUMNOS.DNI);
 
-/* otra manera (renombrando tablas) */
+/* otra manera (renombrando tablas)(mejor para consultas largas) */
 SELECT NOMBRE
 FROM ASIGNATURAS A, ALUMNOS AL, NOTAS N
 WHERE
-	NOMBRE LIKE '%o%o%o%' AND POBLA='Madrid'
+	(NOMBRE LIKE '%o%o%o%' AND POBLA='Madrid')
 	AND
-	A.COD = N.COD AND N.DNI = AL.DNI;
+	(A.COD = N.COD AND N.DNI = AL.DNI);
 	
 /* 10.	Visualizar los nombres de alumnos que tengan una nota entre 7 y 8 en la asignatura de “FOL”.*/
 SELECT APENOM,NOMBRE,NOTA
 FROM NOTAS N, ALUMNOS AL, ASIGNATURAS A
 WHERE 
-	NOTA BETWEEN 7 AND 8 AND NOMBRE LIKE 'FOL'
+	(NOTA BETWEEN 7 AND 8 AND NOMBRE LIKE 'FOL')
 	AND
-	AL.DNI = N.DNI AND A.COD = N.COD;
+	(AL.DNI = N.DNI AND A.COD = N.COD);
 
 /* 11.	Visualizar los nombres de asignaturas que no tengan suspensos.*/
-/*si en el examen pide visualizar los distintos nombre... PONER DISTINCT*/
+/********si en el examen pide visualizar los DISTINTOS nombre... PONER DISTINCT*********/
 SELECT DISTINCT NOMBRE FROM ASIGNATURAS A, NOTAS N WHERE NOTA >= 5 AND A.COD = N.COD;
 
 /* 12.	Visualizar los nombres de alumnos de “Madrid” que tengan alguna asignatura suspensa.*/
 SELECT APENOM
 FROM NOTAS N, ALUMNOS AL, ASIGNATURAS A
 WHERE
-	POBLA LIKE 'Madrid' AND NOTA < 5
+	(POBLA = 'Madrid' AND NOTA < 5)
 	AND
-	AL.DNI = N.DNI AND A.COD = N.COD;
+	(AL.DNI = N.DNI AND A.COD = N.COD);
 
 /* 13.	Mostrar los nombres de alumnos que tengan la misma nota que tiene “Díaz Fernández, María” en FOL en alguna asignatura.*/
 /* ??? creo que funciona */
-SELECT APENOM, NOMBRE, NOTA
+SELECT DISTINCT APENOM, NOMBRE, NOTA
 FROM NOTAS N, ALUMNOS AL, ASIGNATURAS A
 WHERE
 	NOTA LIKE (
@@ -94,18 +93,18 @@ WHERE
 SELECT APELLIDO, OFICIO, LOC
 FROM EMPLE E, DEPART D
 WHERE
-	OFICIO LIKE 'ANALISTA'
+	(OFICIO LIKE 'ANALISTA')
 	AND
-	D.DEPT_NO = E.DEPT_NO;
+	(D.DEPT_NO = E.DEPT_NO);
 
 
 
 /* === TABLAS EMPLE y DEPART === */
 /* 1.	Obtener los datos de los empleados cuyo director (columna DIR de EMPLE) sea ‘CEREZO’.*/	
-SELECT * FROM EMPLE WHERE DIR LIKE (SELECT EMP_NO FROM EMPLE WHERE APELLIDO='CEREZO');
+SELECT * FROM EMPLE WHERE DIR = (SELECT EMP_NO FROM EMPLE WHERE APELLIDO='CEREZO');
 
 /* 2.	Obtener los datos de los empleados del departamento de ‘VENTAS’.*/
-SELECT * FROM EMPLE WHERE DEPT_NO LIKE (SELECT DEPT_NO FROM DEPART WHERE DNOMBRE LIKE 'VENTAS');
+SELECT * FROM EMPLE WHERE DEPT_NO = (SELECT DEPT_NO FROM DEPART WHERE DNOMBRE LIKE 'VENTAS');
 
 /* 3.	Obtener los datos de los departamentos que no tengan empleados.*/
 SELECT * FROM DEPART WHERE DEPT_NO NOT IN (SELECT DISTINCT DEPT_NO FROM EMPLE);

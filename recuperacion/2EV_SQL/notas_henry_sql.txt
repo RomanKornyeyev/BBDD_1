@@ -1,0 +1,62 @@
+14:30 20/12/2022
+
+en caso de que se pida borrar una restricción es mejor ponerle un nombre para facilitar su borrado.
+
+siempre que se haga una clave compuesta se debe hacer debajo. (pregunta de examen).
+
+delete, update y otras modificaciones entran en el examen.
+
+si hay que modificar dos tablas, cada una de ellas debe tener su propio alter table.
+
+varchar y fechas siempre con comillas.
+
+si se tiene que usar vacío poner siempre null.
+
+
+= solo se usa cuando se ponga la palabra completa.
+
+para casos % u otros caracteres de relleno se debe usar LIKE siempre.
+
+poner el nexo de unión de las tablas al principio.
+
+
+visualizar los distintos --> select distinct
+
+
+15:15 20/12/2022
+
+importantes las funciones de grupos de valores.
+to_char (funciones de conversión) para fecha y para number. 
+
+dentro de funciones que devuelven valores caracter --> 
+
+no entra en el examen pero echarle un ojo. (3.1 y 3.2)
+
+
+listas no entran
+
+
+
+FUNCIONES
+
+Trabajan sobre columnas, por eso devuelven un solo tipo de dato o campo, por ello debe hacerse de una forma específica.
+
+Solo puede ir una en la select.
+
+Count no cuenta nulos (no necesario poner nada en el where de la select). (ejercicio 3 funciones)
+
+
+(ejercicio 6)
+
+En el caso de que queramos hacer algo que implique varios campos o varias columnas es necesario hacer una subconsulta.
+
+
+
+IMPORTANTES LAS FUNCIONES DE FORMATEO DE FECHA
+
+
+IMPORTANTES LAS MÁSCARAS DE FORMATEO DE NUMBER Y DE FECHAS PARA EL EXAMEN.
+
+
+EN TO_CHAR PUEDE ETIQUETARSE LA SALIDA DE LA CONSULTA --> mirar el ejemplo de: Dada la tabla emple…
+
