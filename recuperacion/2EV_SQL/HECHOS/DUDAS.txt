@@ -4,9 +4,14 @@ LIKE 	PARA "QUE SEA COMO" (GENERALMENTE STRINGS)
 
 ¿IN?
 
+----------
+
 T10
 ¿OUTER JOIN ES IMPORTANTE?
 ¿Y UNION, INTERSECT Y MINUS?
 
 T11
 ¿Qué es lo importante de T11?
+
+GENERALES
+¿El examen es case sensitive?¿Importa poner las sentencias con mayus y minus?
