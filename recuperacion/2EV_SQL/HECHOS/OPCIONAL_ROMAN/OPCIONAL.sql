@@ -42,8 +42,13 @@ INSERT INTO ARTICULOS VALUES(14, 'PENDRIVE', 15, 4);
 COMMIT;
 /* EL COMMIT SOLO ES PARA LOS INSERTS */
 
+
+
+
+
+
+/* === ALTER === */
 /* ANTES DE LOS ALTER, METER TODAS LAS TABLAS Y LUEGO METER ALTERS 1 A 1 */
-/* ALTER */
 /*2.1- Añadir los campos DIRECCION y LOCALIDAD a la tabla fabricantes.*/
 ALTER TABLE FABRICANTES ADD (
 	DIRECCION VARCHAR(100),
@@ -78,3 +83,43 @@ SELECT NOMBRE, PRECIO FROM ARTICULOS WHERE PRECIO < 200;
 
 /*3.3- Obtener todos los datos de los artículos cuyo precio este entre 60 y 120€.*/
 SELECT * FROM ARTICULOS WHERE PRECIO BETWEEN 60 AND 120;
+
+/*3.4- Obtener el nombre y el precio en pesetas.*/
+SELECT NOMBRE, PRECIO*166.386 FROM ARTICULOS;
+
+/*3.5- Obtener el precio medio de todos los productos.*/
+SELECT AVG(PRECIO) "PRECIO MEDIO" FROM ARTICULOS;
+
+/*3.6- Obtener el precio medio de los artículos cuyo fabricante sea 2.*/
+/* no haría falta subconsulta/combinación de tablas */
+SELECT AVG(PRECIO) "PRECIO MEDIO FAB2" FROM ARTICULOS WHERE COD_FAB = 2;
+
+/*3.7- Obtener el número de artículos cuyo precio sea mayor igual a 180€.*/
+SELECT COUNT(COD_ART) "ARTÍCULOS >=180e" FROM ARTICULOS WHERE PRECIO >=180;
+
+/*3.8- Obtener el nombre y el precio de los artículos cuyo precio sea mayor igual a 
+180€ y ordenarlos descendentemente por precio, y luego ascendentemente por nombre.*/
+SELECT NOMBRE, PRECIO FROM ARTICULOS WHERE PRECIO >= 180 ORDER BY PRECIO DESC, NOMBRE ASC;
+
+/*3.9- Obtener un listado de artículos, incluyendo el nombre del artículo, su precio
+y el nombre de su fabricante.*/
+SELECT A.NOMBRE "ARTICULO", A.PRECIO, F.NOMBRE "FABRICANTE" FROM ARTICULOS A, FABRICANTES F WHERE A.COD_FAB=F.COD_FAB;
+
+/*3.10- Obtener el precio medio de los productos de cada fabricante.*/
+SELECT COD_FAB "FABRICANTE" , AVG(PRECIO) "PRECIO MEDIO" FROM ARTICULOS GROUP BY COD_FAB;
+
+/*3.11- Obtener el precio medio de los productos de cada fabricante, mostrando el 
+nombre del fabricante también.*/
+SELECT F.NOMBRE "FABRICANTE", AVG(A.PRECIO) "PRECIO MEDIO" FROM ARTICULOS A, FABRICANTES F WHERE A.COD_FAB=F.COD_FAB GROUP BY F.NOMBRE;
+
+/*3.12- Obtener los nombres de los fabricantes que ofrezcan productos cuyo precio 
+medio se mayor o igual a 150€.*/
+SELECT F.NOMBRE, AVG(PRECIO) FROM FABRICANTES F, ARTICULOS A WHERE F.COD_FAB=A.COD_FAB GROUP BY F.NOMBRE HAVING AVG(PRECIO) >= 150;
+
+/*3.13- Obtener el nombre y el precio del artículo más barato.*/
+SELECT NOMBRE, PRECIO FROM ARTICULOS WHERE PRECIO IN (SELECT MIN(PRECIO) FROM ARTICULOS);
+
+/*3.14- Obtener una lista con el nombre y el precio de los artículos más caros de 
+cada proveedor incluyendo el nombre del proveedor.*/
+SELECT A.NOMBRE "ARTICULO", A.PRECIO, F.NOMBRE "PROVEEDOR" FROM ARTICULOS A, FABRICANTES F
+WHERE A.COD_FAB=F.COD_FAB AND A.PRECIO IN (SELECT MAX(A.PRECIO) FROM ARTICULOS WHERE A.COD_FAB=F.COD_FAB);

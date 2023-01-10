@@ -9,3 +9,9 @@ GROUP BY (empleados que hay EN CADA departamento)
 el HAVING nunca existe SI NO TIENE UN GROUP BY (visualizar los departamentos con más de 4 empleados). Si tengo que contar es porque he agrupado antes.
 orden:
 SELECT * FROM A1, A2 WHERE ... GROUP BY ... HAVING ... ORDER BY ...;
+
+
+T7:
+-creacion tablas con restricciones, inserts, delete, update, alter table, borrar constraints, etc.
+TABLAS: drop table, create table, restricciones, alter table.
+FILAS: insert, delete, update, select.
