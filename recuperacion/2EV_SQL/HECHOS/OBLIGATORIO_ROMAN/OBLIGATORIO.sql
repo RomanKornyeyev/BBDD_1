@@ -94,34 +94,118 @@ SELECT F.NOMBRE "Fabricante", P.NOMBRE "Programa" FROM PROGRAMA P, DESARROLLA D,
 WHERE (P.CODIGO=D.CODIGO) AND (D.ID_FAB=F.ID_FAB) AND F.NOMBRE = 'Oracle';
 
 /*28 ¿Qué comercios distribuyen Windows?*/
-/*29 Genera un listado de los programas y cantidades que se han distribuido a El*/
-/*Corte Inglés de Madrid.*/
+SELECT C.NOMBRE FROM PROGRAMA P, COMERCIO C, DISTRIBUYE D WHERE (P.CODIGO=D.CODIGO AND C.CIF=D.CIF) AND P.NOMBRE='Windows';
+
+/*29 Genera un listado de los programas y cantidades que se han distribuido a El
+Corte Inglés de Madrid.*/
+SELECT
+	P.NOMBRE, D.CANTIDAD
+FROM
+	PROGRAMA P, COMERCIO C, DISTRIBUYE D 
+WHERE 
+	(P.CODIGO=D.CODIGO AND C.CIF=D.CIF) 
+AND 
+	(C.NOMBRE='El Corte Inglés' AND C.CIUDAD='Madrid');
+
 /*30 ¿Qué fabricante ha desarrollado Freddy Hardest?*/
+SELECT F.NOMBRE FROM FABRICANTE F, PROGRAMA P, DESARROLLA D WHERE F.ID_FAB=D.ID_FAB AND P.CODIGO=D.CODIGO AND P.NOMBRE='Freddy Hardest';
+
 /*31 Selecciona el nombre de los programas que se registran por Internet.*/
+SELECT P.NOMBRE "PROGRAMAS REG. INTERNET" FROM PROGRAMA P, REGISTRA R WHERE P.CODIGO=R.CODIGO AND R.MEDIO='Internet';
+SELECT NOMBRE "PROGRAMAS REG. INTERNET" FROM PROGRAMA WHERE CODIGO IN (SELECT CODIGO FROM REGISTRA WHERE MEDIO='Internet');
+
 /*32 Selecciona el nombre de las personas que se registran por Internet.*/
+SELECT C.NOMBRE "NOMBRE CLI. REG. INTERNET" FROM CLIENTE C, REGISTRA R WHERE C.DNI=R.DNI AND R.MEDIO='Internet';
+
 /*33 ¿Qué medios ha utilizado para registrarse Pepe Pérez?*/
-/*34 ¿Qué usuarios han optado por Internet como medio de registro?*/
-/*35 ¿Qué programas han recibido registros por tarjeta postal?*/
-/*36 ¿En qué localidades se han vendido productos que se han registrado por*/
-/*Internet?*/
-/*37 Obtén un listado de los nombres de las personas que se han registrado por*/
-/*Internet, junto al nombre de los programas para los que ha efectuado el*/
-/*registro.*/
-/*38 Genera un listado en el que aparezca cada cliente junto al programa que ha*/
-/*registrado, el medio con el que lo ha hecho y el comercio en el que lo ha*/
-/*adquirido.*/
-/*39 Genera un listado con las ciudades en las que se pueden obtener los*/
-/*productos de Oracle.*/
+SELECT C.NOMBRE "NOMBRE", R.MEDIO "MEDIO DE REGISTRO" FROM CLIENTE C, REGISTRA R WHERE C.DNI=R.DNI AND C.NOMBRE='Pepe Pérez';
+
+/*34 ¿Qué usuarios han optado por Internet como medio de registro? (repetido) */
+SELECT C.NOMBRE "NOMBRE", R.MEDIO "MEDIO DE REGISTRO" FROM CLIENTE C, REGISTRA R WHERE C.DNI=R.DNI AND R.MEDIO='Internet';
+
+/*35 ¿Qué programas han recibido registros por tarjeta postal? (no estoy seguro de si hacen falta las 3 tablas)*/
+SELECT P.NOMBRE FROM PROGRAMA P, REGISTRA R WHERE P.CODIGO=R.CODIGO AND R.MEDIO='Tarjeta postal';
+
+/*36 ¿En qué localidades se han vendido productos que se han registrado por
+Internet? (no estoy seguro de si hacen falta las 3 tablas)*/
+SELECT C.CIUDAD FROM COMERCIO C, REGISTRA R WHERE C.CIF=R.CIF AND R.MEDIO='Internet';
+
+/*37 Obtén un listado de los nombres de las personas que se han registrado por
+Internet, junto al nombre de los programas para los que ha efectuado el
+registro.*/
+SELECT C.NOMBRE, P.NOMBRE "PROGRAMA" FROM PROGRAMA P, CLIENTE C, REGISTRA R WHERE P.CODIGO=R.CODIGO AND C.DNI=R.DNI AND R.MEDIO='Internet';
+
+/*38 Genera un listado en el que aparezca cada cliente junto al programa que ha
+registrado, el medio con el que lo ha hecho y el comercio en el que lo ha
+adquirido.*/
+SELECT
+	CL.NOMBRE "CLIENTE", P.NOMBRE "PROGRAMA", R.MEDIO, CM.NOMBRE "COMERCIO"
+FROM 
+	PROGRAMA P, COMERCIO CM, CLIENTE CL, REGISTRA R
+WHERE
+	P.CODIGO=R.CODIGO AND CM.CIF=R.CIF AND CL.DNI=R.DNI;
+
+/*39 Genera un listado con las ciudades en las que se pueden obtener los
+productos de Oracle.*/
+SELECT DISTINCT C.CIUDAD FROM COMERCIO C, PROGRAMA P, DESARROLLA DE, FABRICANTE F, DISTRIBUYE DI
+WHERE C.CIF=DI.CIF AND P.CODIGO=DI.CODIGO AND F.ID_FAB=DE.ID_FAB AND P.CODIGO=DE.CODIGO AND F.NOMBRE='Oracle';
+/*Espero no ver este en el examen xD*/
+
 /*40 Obtén el nombre de los usuarios que han registrado Access XP.*/
-/*41 Nombre de aquellos fabricantes cuyo país es el mismo que ʻOracleʼ.*/
-/*(Subconsulta).*/
-/*42 Nombre de aquellos clientes que tienen la misma edad que Pepe Pérez.*/
-/*(Subconsulta).*/
-/*43 Genera un listado con los comercios que tienen su sede en la misma ciudad    */
-/*que tiene el comercio ʻFNACʼ. (Subconsulta).*/
-/*44 Nombre de aquellos clientes que han registrado un producto de la misma*/
-/*forma que el cliente ʻPepe Pérezʼ. (Subconsulta).*/
+SELECT C.NOMBRE "USERS REG. ACC.XP" FROM PROGRAMA P, CLIENTE C, REGISTRA R WHERE (P.CODIGO=R.CODIGO AND C.DNI=R.DNI) AND (P.NOMBRE='Access' AND P.VERSION='XP');
+
+/*41 Nombre de aquellos fabricantes cuyo país es el mismo que ʻOracleʼ.
+(Subconsulta).*/
+SELECT NOMBRE FROM FABRICANTE WHERE PAIS IN (SELECT PAIS FROM FABRICANTE WHERE NOMBRE='Oracle');
+
+/*42 Nombre de aquellos clientes que tienen la misma edad que Pepe Pérez (Subconsulta).*/
+SELECT NOMBRE FROM CLIENTE WHERE EDAD IN (SELECT EDAD FROM CLIENTE WHERE NOMBRE='Pepe Pérez');
+
+/*43 Genera un listado con los comercios que tienen su sede en la misma ciudad
+que tiene el comercio ʻFNACʼ. (Subconsulta).*/
+SELECT NOMBRE FROM COMERCIO WHERE CIUDAD IN (SELECT CIUDAD FROM COMERCIO WHERE NOMBRE='FNAC');
+
+/*44 Nombre de aquellos clientes que han registrado un producto de la misma
+forma que el cliente ʻPepe Pérezʼ. (Subconsulta).*/
+/* repasar este */
+SELECT DISTINCT C.NOMBRE FROM CLIENTE C, REGISTRA R WHERE C.DNI=R.DNI AND R.MEDIO IN (SELECT R.MEDIO FROM CLIENTE C, REGISTRA R WHERE C.DNI=R.DNI AND C.NOMBRE='Pepe Pérez'); 
+
 /*45 Obtener el número de programas que hay en la tabla programas.*/
+SELECT COUNT(CODIGO) "NUM PROGRAMAS" FROM PROGRAMA;
+
 /*46 Calcula el número de clientes cuya edad es mayor de 40 años.*/
-/*47 Calcula el número de productos que ha vendido el establecimiento cuyo CIF*/
-/*es 1.*/
+SELECT COUNT(DNI) "NUM CLI EDAD>40" FROM CLIENTE WHERE EDAD > 40;
+
+/*47 Calcula el número de productos que ha vendido el establecimiento cuyo CIF es 1.*/
+SELECT SUM(CANTIDAD) FROM DISTRIBUYE WHERE CIF=1;
+
+/*48 Calcula la media de programas que se venden cuyo código es 7.*/
+SELECT AVG(CANTIDAD) FROM DISTRIBUYE WHERE CODIGO=7;
+
+/*49 Calcula la mínima cantidad de programas de código 7 que se ha vendido*/
+/*(no sé si está bien)*/
+SELECT MIN(CANTIDAD) FROM DISTRIBUYE WHERE CODIGO=7;
+
+/*50 Calcula la máxima cantidad de programas de código 7 que se ha vendido.*/
+SELECT MAX(CANTIDAD) FROM DISTRIBUYE WHERE CODIGO=7;
+
+/*51 ¿En cuántos establecimientos se vende el programa cuyo código es 7?*/
+SELECT COUNT(CIF) FROM DISTRIBUYE WHERE CODIGO=7;
+
+/*52 Calcular el número de registros que se han realizado por Internet.*/
+SELECT COUNT(*) "NUM REGISTROS POR INTERNET" FROM REGISTRA WHERE MEDIO = 'Internet';
+
+/*53 Obtener el número total de programas que se han vendido en ʻSevillaʼ.*/
+SELECT SUM(CANTIDAD) "NUM PROGRAMAS VEND EN SEVILLA" FROM COMERCIO C, DISTRIBUYE D WHERE C.CIF=D.CIF AND C.CIUDAD='Sevilla';
+
+/*54 Calcular el número total de programas que han desarrollado los fabricantes 
+cuyo país es ʻEstados Unidosʼ.*/
+SELECT COUNT(P.CODIGO) "PROGRAMAS DESARR. EN EEUU" FROM FABRICANTE F, PROGRAMA P, DESARROLLA D
+WHERE F.ID_FAB=D.ID_FAB AND P.CODIGO=D.CODIGO AND F.PAIS='Estados Unidos';
+
+/*55 Visualiza el nombre de todos los clientes en mayúscula. En el resultado de
+la consulta debe aparecer también la longitud de la cadena nombre.*/
+SELECT UPPER(NOMBRE) "NOMBRE", LENGTH(NOMBRE) "LONGITUD" FROM CLIENTE;
+
+/*56 Con una consulta concatena los campos nombre y versión de la tabla PROGRAMA.*/
+SELECT CONCAT(NOMBRE, VERSION) FROM PROGRAMA;
