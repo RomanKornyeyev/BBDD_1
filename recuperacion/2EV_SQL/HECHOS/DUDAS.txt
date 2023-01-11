@@ -1,17 +1,16 @@
 ¿Cuándo LIKE y cuando "="?
  = 	PARA RESULTADOS EXACTAMENTE IGUALES
 LIKE 	PARA "QUE SEA COMO" (GENERALMENTE STRINGS)
-
-¿IN?
+¿IN?	PARA CONSULTAR QUE ESTÉ EN VARIAS TABLAS
 
 ----------
 
 T10
 ¿OUTER JOIN ES IMPORTANTE? NO
-¿Y UNION, INTERSECT Y MINUS?
+¿Y UNION, INTERSECT Y MINUS? SÍ
 
 T11
 ¿Qué es lo importante de T11?
 
 GENERALES
-¿El examen es case sensitive?¿Importa poner las sentencias con mayus y minus?
+¿El examen es case sensitive?¿Importa poner las sentencias con mayus y minus? NO, SOLO PARA STRINGS
