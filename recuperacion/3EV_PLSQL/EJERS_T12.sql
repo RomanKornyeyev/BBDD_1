@@ -1,6 +1,10 @@
 /* === EJERCICIOS PROPUESTOS === */
-SET SERVEROUTPUT ON; /*para que salga el texto por consola (si no, no sale nada)*/
-SET VERIFY OFF; /*para que pregunte solo 1 vez para la var introducida x teclado*/
+/*para que salga el texto por consola (si no, no sale nada)*/
+SET SERVEROUTPUT ON; 
+/*para que pregunte solo 1 vez para la var introducida x teclado*/
+SET VERIFY OFF; 
+/* en caso de crear un bloque/procedimiento/función con errores de compilación */
+SHOW ERRORS; 
 
 
 /*1-Construye un bloque PL/SQL que escriba el texto HOLA.*/
@@ -80,7 +84,7 @@ DECLARE
 	V_AUMENTO NUMBER(5) DEFAULT 0;
 BEGIN
 	V_EMP_NO:=&VT_EMPNO;
-	SELECT OFICIO INTO V_OFICIO FROM EMPLE WHERE EMP_NO=V_EMP_NO;
+	SELECT OFICIO INTO V_OFICIO FROM EMPLE WHERE EMP_NO=(SELECT );
 	IF V_OFICIO='PRESIDENTE' THEN
 		V_AUMENTO:=30;
 	END IF;
@@ -208,3 +212,110 @@ END;
 
 EXECUTE CAMBIAR_OFICIO(7934, 'NOSE');
 
+
+/*13- Escribir un procedimiento que modifique el precio de costo de un artículo pasándole el nb del artículo, el nuevo precio y la categoría.
+El procedimiento comprobará que la variación del precio no supere el 2%. Usar el bloque de EXCEPTION para que el programa funcione
+si no encuentra el artículo.
+NO PROBAR CON LOS MACARRONES. COGER LA MANTEQUILLA.
+EJEMPLO: Mantequilla 2   Segunda
+*/
+CREATE OR REPLACE PROCEDURE MOD_PRECIO(NOM VARCHAR2, PREC NUMBER, CAT VARCHAR2)
+IS
+	V_NOMBRE ARTICULOS.ARTICULO%TYPE;
+	V_PRECIO ARTICULOS.PRECIO_COSTO%TYPE;
+BEGIN
+	SELECT ARTICULO, PRECIO_COSTO INTO V_NOMBRE, V_PRECIO FROM ARTICULOS WHERE ARTICULO=NOM AND CATEGORIA=CAT;
+	IF (PREC <= (V_PRECIO*1.02)) THEN
+		UPDATE ARTICULOS SET PRECIO_COSTO=PREC WHERE ARTICULO=NOM AND CATEGORIA=CAT;
+		DBMS_OUTPUT.PUT_LINE('Modificación exitosa');
+	ELSE
+		DBMS_OUTPUT.PUT_LINE('Precio demasiado elevado, no se ha modificado');
+	END IF;
+EXCEPTION
+	WHEN NO_DATA_FOUND THEN
+		DBMS_OUTPUT.PUT_LINE('ERROR: Producto no encontrado.');
+END;
+/
+EXECUTE MOD_PRECIO('Mantequilla', 2, 'Segunda');
+
+
+/*14- Codifica un procedimiento que reciba una cadena y la visualice al revés.*/
+CREATE OR REPLACE PROCEDURE PALABRA_AL_REVES(CADENA VARCHAR)
+IS
+	R_CADENA VARCHAR2(50);
+BEGIN
+	FOR I IN REVERSE 1..LENGTH(CADENA) LOOP
+		R_CADENA:=R_CADENA||SUBSTR(CADENA,I,1);
+	END LOOP;
+	DBMS_OUTPUT.PUT_LINE('PALABRA AL REVÉS: '||R_CADENA);
+END;
+/
+
+EXECUTE PALABRA_AL_REVES('HOLA');
+
+
+/*15- Crear una función que sume dos números.*/
+CREATE OR REPLACE FUNCTION SUMAR_FUN(NUM1 NUMBER, NUM2 NUMBER) RETURN NUMBER
+AS
+	SUMA NUMBER;
+BEGIN
+	SUMA:=NUM1+NUM2;
+	RETURN(SUMA);
+END;
+/
+
+BEGIN
+	DBMS_OUTPUT.PUT_LINE('Suma: '||SUMAR_FUN(3,3));
+END;
+/
+
+
+/* 16-Crear una función que visualice una cadena al revés. */
+CREATE OR REPLACE FUNCTION CADENAREVES(CADENA VARCHAR2) RETURN VARCHAR2
+IS 
+	R_CADENA VARCHAR2(50);
+BEGIN
+	FOR I IN REVERSE 1..LENGTH(CADENA) LOOP
+		R_CADENA:=R_CADENA || SUBSTR(CADENA,I,1);
+	END LOOP;
+	RETURN(R_CADENA);
+END;
+/
+
+/*COMO EJECUTAR*/
+SELECT CADENAREVES('HOLA') FROM DUAL;
+
+
+/*17- Escribe una función que reciba una fecha y devuelva el año,
+en número, correspondiente a esa fecha.*/
+SET VERIFY OFF;
+SET SERVEROUTPUT ON;
+CREATE OR REPLACE FUNCTION ANNIO_F(FECHA DATE) RETURN NUMBER
+IS 
+	ANNIO NUMBER;
+BEGIN
+	ANNIO := TO_NUMBER(TO_CHAR(FECHA, 'YYYY'));
+	RETURN(ANNIO);
+END;
+/
+
+/*COMO EJECUTAR*/
+SELECT ANNIO_F('24-12-2015') FROM DUAL;
+
+
+/*18-Escribir una función que devuelva el valor con IVA de una cantidad que se pasara como primer parámetro.
+La función podrá recoger un segundo parámetro, que será el tipo de IVA siendo el valor por defecto */
+CREATE OR REPLACE FUNCTION SUMAR_IVA(CANTIDAD NUMBER, IVA NUMBER DEFAULT 16) RETURN NUMBER
+IS
+	VALOR_SUMADO NUMBER;
+BEGIN 
+	VALOR_SUMADO := CANTIDAD+CANTIDAD*(IVA/100);
+	RETURN(VALOR_SUMADO);
+END;
+/
+
+/*EJECUCIÓN*/
+SELECT SUMAR_IVA(500, 20) FROM DUAL;
+
+/*19- Utilizar la función anterior para obtener el salario de los empleados con el iva de la función.*/
+SELECT EMP_NO, SALARIO, SUMAR_IVA(SALARIO) FROM EMPLE;
