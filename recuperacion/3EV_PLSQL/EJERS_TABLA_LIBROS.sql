@@ -59,3 +59,31 @@ SELECT TITULO, N_INCREMENTADOR(PRECIO, 10) FROM DUAL;
 
 /* Realizamos otro "select" similar al anterior, pero en esta ocasión le enviamos a la función otro valor como segundo argumento. */
 SELECT TITULO, N_INCREMENTADOR(PRECIO,15) FROM DUAL;
+
+/* Creamos o reemplazamos una función que recibe un parámetro de tipo numérico
+y retorna una cadena de caracteres.
+Se define una variable en la zona de definición de variables denominada "valorretornado" de tipo varchar.
+En el cuerpo de la función empleamos una estructura condicional (if) para averiguar
+si el valor enviado como argumento es menor o igual a 20,
+si lo es, almacenamos en la variable "valorretornado" la cadena "economico",
+en caso contrario guardamos en tal variable la cadena "costoso";
+al finalizar la estructura condicional retornamos la variable "valorretornado":
+ */
+
+CREATE OR REPLACE FUNCTION CONVERTIDOR(VALOR_RECIBIDO NUMBER)
+RETURN VARCHAR
+AS
+	VALOR_RETORNADO VARCHAR(50);
+BEGIN
+	IF VALOR_RECIBIDO <=20 THEN
+	VALOR_RETORNADO:='ECONOMICO';
+	ELSE VALOR_RETORNADO:='COSTOSO';
+	END IF;
+	RETURN (VALOR_RETORNADO);
+END;
+/
+
+/* Realizamos un "select" para mostrar el título, precio y una cadena que indique si el libro es económico o costoso
+(llamando a la función creada anteriormente). */
+
+SELECT TITULO, PRECIO, CONVERTIDOR(PRECIO) FROM LIBROS12;
