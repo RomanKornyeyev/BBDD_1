@@ -1,0 +1,46 @@
+SET SERVEROUTPUT ON;
+SET VERIFY OFF;
+SHOW ERRORS;
+
+/*1-	Escribir un bloque PL que utilice un cursor explicito para visualizar el nombre
+y la localidad de todos los departamentos.*/
+DECLARE
+	V_DNOM DEPART.DNOMBRE%TYPE;
+	V_LOC DEPART.LOC%TYPE;
+	CURSOR C1 IS SELECT DNOMBRE, LOC FROM DEPART;
+BEGIN
+	OPEN C1;
+	LOOP
+		FETCH C1 INTO V_DNOM, V_LOC;
+		EXIT WHEN C1%NOTFOUND;
+		DBMS_OUTPUT.PUT_LINE('NOMBRE DEPART: '||V_DNOM||' *** LOCALIDAD: '||V_LOC);
+	END LOOP;
+	CLOSE C1;
+END;
+/
+/*EL EXIT VA ANTES PARA NO DUPLICAR LA ÚLTIMA ROW DE SALIDA*/
+
+
+/*2-	Visualizar los apellidos de los empleados pertenecientes al departamento 20 numerándolos secuencialmente.
+Utilizar   %ROWCOUNT los números secuenciales.
+1.SANCHEZ
+2.JIMENEZ
+3.GIL
+4.ALONSO
+5.FERNANDEZ
+*/
+/*CON WHILE*/
+DECLARE
+	VNOM VARCHAR(30);
+	VLOC VARCHAR(30);
+	CURSOR C1 IS SELECT DNOMBRE, LOC FROM DEPART;
+BEGIN
+	OPEN C1;
+	FETCH C1 INTO VNOM, VLOC;
+	WHILE C1%FOUND LOOP
+		DBMS_OUTPUT.PUT_LINE(VNOM||'*'||VLOC);
+		FETCH C1 INTO VNOM, VLOC;
+	END LOOP;
+	CLOSE C1;
+END;
+/

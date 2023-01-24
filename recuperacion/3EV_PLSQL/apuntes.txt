@@ -1,0 +1,2 @@
+bloques anónimos, procedimientos, funciones, devuelven 1 row.
+cursores: devuelven varias rows
