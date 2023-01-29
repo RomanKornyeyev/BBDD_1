@@ -47,6 +47,9 @@ END;
 /
 
 
+
+
+
 /*2-	Visualizar los apellidos de los empleados pertenecientes al departamento 20 numerándolos secuencialmente.
 Utilizar   %ROWCOUNT los números secuenciales.
 1.SANCHEZ
@@ -68,6 +71,9 @@ BEGIN
 	CLOSE C1;
 END;
 /
+
+
+
 
 
 /*3-	Visualizar los empleados de un departamento mediante un procedimiento y utilizando variables de acoplamiento.*/
@@ -104,6 +110,9 @@ END;
 EXECUTE VER_EMPLES(20);
 
 
+
+
+
 /*4-	Escribir un bloque PL que visualice el apellido, el oficio y la comisión de los empleados que supere los 500€.
 Utilizando CURSOR FOR........LOOP.*/
 DECLARE
@@ -119,6 +128,9 @@ REM *********EN LOS FOR LOOP LOS CURSORES SE ABREN Y CIERRAN AUTOMÁTICAMENTE
 REM ***FOR LOOP ESTÁ ROTÍSIMO, PERO EN ALGUNOS MATCHUPS ES UNA MIERDA (NO VA)
 
 
+
+
+
 /*5-	 Escribir un bloque PL que visualice el apellido y la fecha de alta de todos los empleados ordenados por fecha de alta.
 Utilizando CURSOR FOR........LOOP.*/
 DECLARE
@@ -131,17 +143,39 @@ END;
 /
 
 
+
+
+
 /*6-	Desarrollar un procedimiento que visualice el apellido y la fecha de alta de todos los empleados ordenados por apellido.*/
 CREATE OR REPLACE PROCEDURE VER_EMPLES
 IS
 	CURSOR C1 IS SELECT APELLIDO, FECHA_ALT FROM EMPLE ORDER BY APELLIDO;
 BEGIN
-	
+	FOR I IN C1 LOOP
+		DBMS_OUTPUT.PUT_LINE(I.APELLIDO||'*'||I.FECHA_ALT);
+	END LOOP;
 END;
 /
+EXECUTE VER_EMPLES;
+
+
+
 
 
 /*7-	Codificar un procedimiento que muestre el nombre de cada departamento y el número de empleados que tiene.*/
+CREATE OR REPLACE PROCEDURE VER_DEP_EMPLES
+IS
+	CURSOR C1 IS SELECT DEPT_NO, COUNT(EMP_NO) AS NUM_EMPLES FROM EMPLE GROUP BY DEPT_NO;
+BEGIN
+	FOR I IN C1 LOOP
+		DBMS_OUTPUT.PUT_LINE(I.DEPT_NO||'*'||I.NUM_EMPLES);
+	END LOOP;
+END;
+/
+EXECUTE VER_DEP_EMPLES;
+
+
+
 
 
 /*8-	Escribir un procedimiento que visualice el apellido y el salario de los cinco empleados que tienen el salario más alto.
@@ -166,6 +200,22 @@ FERNANDEZ*3000
 GIL*3000
 JIMENEZ*2900
 */
+CREATE OR REPLACE PROCEDURE VER_5SALARIO
+IS
+	VAPE VARCHAR(20);
+	VSAL NUMBER;
+	CURSOR C1 IS SELECT APELLIDO, SALARIO FROM EMPLE ORDER BY SALARIO DESC;
+BEGIN
+	OPEN C1;
+	LOOP
+		FETCH C1 INTO VAPE, VSAL;
+		DBMS_OUTPUT.PUT_LINE(VAPE||'*'||VSAL);
+		EXIT WHEN C1%ROWCOUNT=5;
+	END LOOP;
+	CLOSE C1;
+END;
+/
+EXECUTE VER_5SALARIO;
 
 
 /*9-	Codificar un procedimiento que visualice los dos empleados que ganan menos de cada oficio.
@@ -195,3 +245,21 @@ PRESIDENTE*REY*4100
 VENDEDOR*TOVAR*1350
 VENDEDOR*ARROYO*1500
 */
+CREATE OR REPLACE PROCEDURE VER_MENOROFICIO
+IS
+	AUX VARCHAR(20);
+	CONT NUMBER := 0;
+	CURSOR C1 IS SELECT OFICIO, APELLIDO, SALARIO FROM EMPLE ORDER BY OFICIO, SALARIO ASC;
+BEGIN
+	FOR I IN C1 LOOP
+		IF CONT < 2 THEN
+			AUX := I.OFICIO;
+			CONT := CONT + 1;
+			DBMS_OUTPUT.PUT_LINE(I.OFICIO||'*'||I.APELLIDO||'*'||I.SALARIO);
+		ELSIF AUX != I.OFICIO OR CONT>=2 THEN
+			CONT := 0;
+		END IF;
+	END LOOP;
+END;
+/
+EXECUTE VER_MENOROFICIO;
