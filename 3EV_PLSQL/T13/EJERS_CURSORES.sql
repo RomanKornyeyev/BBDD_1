@@ -163,6 +163,7 @@ EXECUTE VER_EMPLES;
 
 
 /*7-	Codificar un procedimiento que muestre el nombre de cada departamento y el número de empleados que tiene.*/
+/*-------------CORREGIR---------------*/
 CREATE OR REPLACE PROCEDURE VER_DEP_EMPLES
 IS
 	CURSOR C1 IS SELECT DEPT_NO, COUNT(EMP_NO) AS NUM_EMPLES FROM EMPLE GROUP BY DEPT_NO;

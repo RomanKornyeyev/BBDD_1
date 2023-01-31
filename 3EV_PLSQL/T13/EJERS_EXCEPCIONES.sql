@@ -163,6 +163,7 @@ SELECT * FROM DEPART;
 
 
 /*5-	Crear una excepción mediante RAISE_APPLICATION_ERROR que no se puede dividir por 0. */
+/*no entra*/
 CREATE OR REPLACE PROCEDURE DIVIDIR_EX(DIVIDENDO NUMBER, DIVISOR NUMBER)
 IS
 	RESULTADO NUMBER;
